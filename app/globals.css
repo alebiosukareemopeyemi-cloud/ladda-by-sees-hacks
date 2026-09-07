@@ -1,26 +1,246 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ================================================================== */
+/*  Ladda token layer — LADDA_BUILD_SPEC.md §9                         */
+/*                                                                    */
+/*  Colours are defined once, here, and nowhere else. No literal hex   */
+/*  may appear anywhere outside this file. Two accents with fixed      */
+/*  jobs: `growth` = progress, `verified` = credentials, `gap` =       */
+/*  warnings only.                                                     */
+/* ================================================================== */
+
+@theme {
+  /* neutrals — sage-biased, never pure grey */
+  --color-paper: #f4f6f2;
+  --color-surface: #ffffff;
+  --color-line: #dfe4db;
+  --color-ink: #101613;
+  --color-ink-muted: #5c6b62;
+
+  /* semantic accents — two, with meaning, plus a warn */
+  --color-growth: #0f6e5c; /* progress, roadmap, primary CTA */
+  --color-growth-soft: #ddede8;
+  --color-verified: #3b4cc0; /* credentials, verification, trust */
+  --color-verified-soft: #e2e5f7;
+  --color-gap: #a8730f; /* gaps and warnings ONLY */
+  --color-gap-soft: #f6ebd4;
+
+  /* radius scale — 6 controls · 12 cards · 999 pills. No exceptions. */
+  --radius-control: 6px;
+  --radius-card: 12px;
+  --radius-pill: 999px;
+
+  /* elevation — interactive surfaces only. Static blocks get a line. §9 */
+  --shadow-control: 0 1px 2px color-mix(in oklab, var(--color-ink) 14%, transparent);
+  --shadow-pop: 0 10px 30px color-mix(in oklab, var(--color-ink) 13%, transparent),
+    0 1px 3px color-mix(in oklab, var(--color-ink) 9%, transparent);
+
+  /* type scale — 12 · 14 · 16 · 20 · 26 · 34 · 46 */
+  --text-xs: 0.75rem;
+  --text-xs--line-height: 1.4;
+  --text-sm: 0.875rem;
+  --text-sm--line-height: 1.45;
+  --text-base: 1rem;
+  --text-base--line-height: 1.6;
+  --text-lg: 1.25rem;
+  --text-lg--line-height: 1.4;
+  --text-xl: 1.625rem;
+  --text-xl--line-height: 1.3;
+  --text-2xl: 2.125rem;
+  --text-2xl--line-height: 1.15;
+  --text-3xl: 2.875rem;
+  --text-3xl--line-height: 1.05;
+
+  /* motion — the climb */
+  --ease-climb: cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-overlay-in: ladda-overlay-in 180ms ease-out;
+  --animate-overlay-out: ladda-overlay-out 140ms ease-in;
+  --animate-content-in: ladda-content-in 220ms var(--ease-climb);
+  --animate-content-out: ladda-content-out 140ms ease-in;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-instrument), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, "SFMono-Regular", monospace;
 }
 
+/* ---- dark: system preference, unless an explicit `.light` opt-out -- */
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  :root:not(.light) {
+    --color-paper: #0d1210;
+    --color-surface: #151c18;
+    --color-line: #253029;
+    --color-ink: #e7ede8;
+    --color-ink-muted: #93a398;
+    --color-growth: #3fbfa3;
+    --color-growth-soft: #14312a;
+    --color-verified: #8b9af5;
+    --color-verified-soft: #1b2140;
+    --color-gap: #dfa83c;
+    --color-gap-soft: #2e2410;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ---- dark: explicit toggle, wins in both directions --------------- */
+:root.dark {
+  --color-paper: #0d1210;
+  --color-surface: #151c18;
+  --color-line: #253029;
+  --color-ink: #e7ede8;
+  --color-ink-muted: #93a398;
+  --color-growth: #3fbfa3;
+  --color-growth-soft: #14312a;
+  --color-verified: #8b9af5;
+  --color-verified-soft: #1b2140;
+  --color-gap: #dfa83c;
+  --color-gap-soft: #2e2410;
+}
+
+/* ================================================================== */
+/*  Base                                                               */
+/* ================================================================== */
+
+@layer base {
+  *,
+  ::after,
+  ::before {
+    border-color: var(--color-line);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    color-scheme: light dark;
+  }
+
+  body {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+    text-wrap: balance;
+  }
+
+  ::selection {
+    background-color: var(--color-growth-soft);
+    color: var(--color-ink);
+  }
+
+  /* fallback focus ring for anything a component doesn't style itself */
+  :focus-visible {
+    outline: 2px solid var(--color-growth);
+    outline-offset: 2px;
+  }
+}
+
+/* ================================================================== */
+/*  Small shared primitives                                            */
+/* ================================================================== */
+
+/* Mono eyebrow — labels, scores, credential ids, section kickers. */
+@utility eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+}
+
+/* Page-enter: fade + 8px rise. Always resolves to its resting state, */
+/* so the page is correct with JS disabled mid-load. §9 motion table. */
+@utility animate-enter {
+  animation: ladda-enter 320ms var(--ease-climb) both;
+}
+
+@keyframes ladda-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Skeleton shimmer. */
+@utility shimmer {
+  background-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in oklab, var(--color-ink) 6%, transparent) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: ladda-shimmer 1.4s ease-in-out infinite;
+}
+
+@keyframes ladda-shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+/* Dialog — Radix waits for these to finish before unmounting. */
+@keyframes ladda-overlay-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes ladda-overlay-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes ladda-content-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+@keyframes ladda-content-out {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-enter,
+  .shimmer,
+  [data-slot="dialog-overlay"],
+  [data-slot="dialog-content"] {
+    animation: none !important;
+  }
 }
