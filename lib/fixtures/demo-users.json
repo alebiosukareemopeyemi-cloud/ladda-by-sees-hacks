@@ -1,0 +1,45 @@
+[
+  {
+    "email": "amara@demo.ladda.app",
+    "name": "Amara Okafor",
+    "state": "Lagos",
+    "educationLevel": "Undergraduate",
+    "targetRoleSlug": "data-analyst",
+    "isDemo": true,
+    "consentScopes": ["PROFILE", "ASSESSMENT", "AGGREGATE_INSIGHTS"],
+    "skills": [
+      {
+        "skillSlug": "spreadsheets",
+        "level": 2,
+        "source": "SELF",
+        "confidence": 0.7,
+        "quote": "I use Excel a lot for my student union budgets."
+      },
+      {
+        "skillSlug": "stakeholder-communication",
+        "level": 2,
+        "source": "SELF",
+        "confidence": 0.6,
+        "quote": "I present our results to the exec team every month."
+      }
+    ]
+  },
+  {
+    "email": "tunde@demo.ladda.app",
+    "name": "Tunde Balogun",
+    "state": "Oyo",
+    "educationLevel": "Polytechnic diploma",
+    "targetRoleSlug": "frontend-engineer",
+    "isDemo": true,
+    "consentScopes": ["PROFILE", "ASSESSMENT"],
+    "skills": [
+      {
+        "skillSlug": "react",
+        "level": 1,
+        "source": "SELF",
+        "confidence": 0.5,
+        "quote": "I've built one small to-do app while following a tutorial."
+      }
+    ]
+  }
+]

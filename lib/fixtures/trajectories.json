@@ -1,0 +1,30 @@
+[
+  {
+    "id": "traj_data_analyst_01",
+    "roleSlug": "data-analyst",
+    "currentTitle": "Data Analyst",
+    "company": "Flutterwave",
+    "publicProfileUrl": "https://www.linkedin.com/in/example-data-analyst",
+    "sourceNote": "SAMPLE record — replace with a hand-verified public profile (read YYYY-MM-DD)",
+    "steps": [
+      { "order": 1, "kind": "SKILL", "title": "SQL fundamentals", "evidence": "listed as top skill" },
+      { "order": 2, "kind": "CERT", "title": "Google Data Analytics Certificate", "provider": "Coursera" },
+      { "order": 3, "kind": "INTERNSHIP", "title": "Data intern", "company": "Andela" },
+      { "order": 4, "kind": "PROJECT", "title": "Public dashboard portfolio", "evidence": "featured section" }
+    ]
+  },
+  {
+    "id": "traj_frontend_engineer_01",
+    "roleSlug": "frontend-engineer",
+    "currentTitle": "Frontend Engineer",
+    "company": "Paystack",
+    "publicProfileUrl": "https://www.linkedin.com/in/example-frontend-engineer",
+    "sourceNote": "SAMPLE record — replace with a hand-verified public profile (read YYYY-MM-DD)",
+    "steps": [
+      { "order": 1, "kind": "SKILL", "title": "JavaScript and the DOM", "evidence": "listed as top skill" },
+      { "order": 2, "kind": "PROJECT", "title": "Open-source React component library", "evidence": "pinned repository" },
+      { "order": 3, "kind": "INTERNSHIP", "title": "Frontend intern", "company": "Interswitch" },
+      { "order": 4, "kind": "FOLLOW", "title": "Ships in public, writes about accessibility", "evidence": "activity feed" }
+    ]
+  }
+]

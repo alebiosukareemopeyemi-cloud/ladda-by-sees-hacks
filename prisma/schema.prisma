@@ -1,0 +1,175 @@
+// Ladda — data model. Mirrors LADDA_BUILD_SPEC.md §5 field-for-field and
+// lib/contracts.ts type-for-type. Frozen Day 0.
+//
+// Additions beyond the §5 listing, all mechanical and non-negotiable for a
+// valid schema (no field in §5 was renamed or retyped):
+//   - `generator` + `datasource` blocks
+//   - back-reference relation fields (`user`, `role`, `roadmap`, ...) wherever
+//     §5 already lists the owning side (User.skills, Role.trajectories, ...)
+//   - `@@index` on those foreign-key columns
+//   - `onDelete: Cascade` on records owned by a User
+// `Skill` is intentionally left with no back-relations (as in §5), so
+// `RoleSkill.skillId`, `UserSkill.skillId` and `Assessment.skillId` are plain
+// scalars with referential integrity enforced in application code.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id             String          @id @default(cuid())
+  email          String?         @unique
+  name           String
+  state          String? // Nigerian state — powers the impact map
+  educationLevel String?
+  targetRoleId   String?
+  isDemo         Boolean         @default(false)
+  createdAt      DateTime        @default(now())
+  skills         UserSkill[]
+  roadmaps       Roadmap[]
+  assessments    Assessment[]
+  credentials    Credential[]
+  messages       MentorMessage[]
+  consent        ConsentRecord?
+}
+
+model Role {
+  id           String       @id @default(cuid())
+  slug         String       @unique // "data-analyst"
+  title        String
+  sector       String
+  demandIndex  Int // 0–100, seeded, drives "in demand" badge
+  roleSkills   RoleSkill[]
+  trajectories Trajectory[]
+}
+
+model Skill {
+  id       String @id @default(cuid())
+  slug     String @unique
+  name     String
+  category String // TECHNICAL | TOOL | DOMAIN | HUMAN
+}
+
+model RoleSkill {
+  roleId    String
+  skillId   String
+  weight    Int // 1–5, how central to the role
+  proofType String // PROJECT | CERT | INTERNSHIP
+  role      Role   @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, skillId])
+  @@index([skillId])
+}
+
+model UserSkill {
+  id         String    @id @default(cuid())
+  userId     String
+  skillId    String
+  level      Int // 0–4
+  source     String // SELF | ASSESSED
+  confidence Float // 0–1, from the extractor
+  quote      String? // ★ the learner's own words. Explainability.
+  verifiedAt DateTime?
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, skillId])
+  @@index([skillId])
+}
+
+model Trajectory {
+  id               String @id // "traj_data_analyst_01" — stable, cited by the AI
+  roleId           String
+  currentTitle     String
+  company          String
+  publicProfileUrl String
+  sourceNote       String // "public LinkedIn profile, read 2026-09-03"
+  steps            Json // TrajectoryStep[]
+  role             Role   @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@index([roleId])
+}
+
+model Roadmap {
+  id           String        @id @default(cuid())
+  userId       String
+  roleId       String
+  gapScore     Int // 0–100
+  gapRationale String
+  generatedAt  DateTime      @default(now())
+  steps        RoadmapStep[]
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([roleId])
+}
+
+model RoadmapStep {
+  id            String   @id @default(cuid())
+  roadmapId     String
+  order         Int
+  kind          String // SKILL | CERT | INTERNSHIP | PROJECT | FOLLOW
+  title         String
+  provider      String?
+  url           String?
+  estWeeks      Int?
+  why           String // one sentence, shown in the UI
+  trajectoryIds String[] // ★ never empty. Enforced in code.
+  status        String   @default("TODO") // TODO | DOING | DONE
+  roadmap       Roadmap  @relation(fields: [roadmapId], references: [id], onDelete: Cascade)
+
+  @@index([roadmapId])
+}
+
+model Assessment {
+  id           String   @id @default(cuid())
+  userId       String
+  skillId      String
+  taskId       String
+  submission   String   @db.Text
+  rubricScores Json // CriterionScore[]
+  overall      Int
+  passed       Boolean
+  feedback     String   @db.Text
+  createdAt    DateTime @default(now())
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([skillId])
+}
+
+model Credential {
+  id         String    @id @default(cuid())
+  userId     String
+  skillSlugs String[]
+  payload    Json // exactly what was signed
+  signature  String // ed25519, hex
+  issuedAt   DateTime  @default(now())
+  revokedAt  DateTime?
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model MentorMessage {
+  id        String   @id @default(cuid())
+  userId    String
+  role      String // user | assistant
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model ConsentRecord {
+  userId    String   @id
+  scopes    String[] // PROFILE | ASSESSMENT | AGGREGATE_INSIGHTS
+  grantedAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}

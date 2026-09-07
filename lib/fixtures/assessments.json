@@ -1,0 +1,24 @@
+[
+  {
+    "taskId": "task_sql_01",
+    "skillSlug": "sql",
+    "title": "Segment customers with a single query",
+    "brief": "Given the `orders` and `customers` tables, write one SQL query that returns the top 10 customers by total spend in the last 90 days, with their order count. Explain your joins in two sentences.",
+    "rubric": [
+      { "name": "Correctness", "description": "Query returns the right rows and columns for the stated question." },
+      { "name": "Join reasoning", "description": "Joins are appropriate and the written explanation is accurate." },
+      { "name": "Readability", "description": "Aliases, formatting and filtering are clear and idiomatic." }
+    ]
+  },
+  {
+    "taskId": "task_react_01",
+    "skillSlug": "react",
+    "title": "Build an accessible filter list",
+    "brief": "Build a React component that renders a list of items with a text filter. The input must be labelled, results must announce their count to screen readers, and the empty state must name the next action.",
+    "rubric": [
+      { "name": "Component design", "description": "State and props are modelled cleanly; no unnecessary re-renders." },
+      { "name": "Accessibility", "description": "Labelling, focus handling and live-region announcements are correct." },
+      { "name": "Empty state", "description": "The zero-results state is designed and names the next action." }
+    ]
+  }
+]

@@ -1,0 +1,24 @@
+[
+  {
+    "slug": "data-analyst",
+    "title": "Data Analyst",
+    "sector": "Technology",
+    "demandIndex": 82,
+    "roleSkills": [
+      { "skillSlug": "sql", "weight": 5, "proofType": "PROJECT" },
+      { "skillSlug": "data-visualisation", "weight": 4, "proofType": "PROJECT" },
+      { "skillSlug": "spreadsheets", "weight": 3, "proofType": "CERT" },
+      { "skillSlug": "stakeholder-communication", "weight": 3, "proofType": "PROJECT" }
+    ]
+  },
+  {
+    "slug": "frontend-engineer",
+    "title": "Frontend Engineer",
+    "sector": "Technology",
+    "demandIndex": 78,
+    "roleSkills": [
+      { "skillSlug": "react", "weight": 5, "proofType": "PROJECT" },
+      { "skillSlug": "stakeholder-communication", "weight": 2, "proofType": "PROJECT" }
+    ]
+  }
+]

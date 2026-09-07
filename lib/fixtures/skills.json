@@ -1,0 +1,7 @@
+[
+  { "slug": "sql", "name": "SQL", "category": "TECHNICAL" },
+  { "slug": "data-visualisation", "name": "Data visualisation", "category": "TECHNICAL" },
+  { "slug": "spreadsheets", "name": "Spreadsheets", "category": "TOOL" },
+  { "slug": "stakeholder-communication", "name": "Stakeholder communication", "category": "HUMAN" },
+  { "slug": "react", "name": "React", "category": "TECHNICAL" }
+]
